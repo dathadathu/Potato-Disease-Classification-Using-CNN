@@ -4,6 +4,6 @@ There are 2 common types of diseases:
 2. **Late Blight** :- caused by a specific micro-organism
 
 If it can be detected by the farmer, can avoid the losses and prevent the plant by applying some treatments.
-Early blight and Late blight have little different
+Early blight and Late blight have little different.
 
 Need to identify accurately, what kind of a disease is there in that potato plant.
