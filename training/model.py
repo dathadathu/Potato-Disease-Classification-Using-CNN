@@ -3,6 +3,10 @@
 import tensorflow as tf
 from tensorflow.keras import models, layers
 import matplotlib.pyplot as plt
+from tensorflow.keras.layers import experimental
+from tensorflow.keras.layers.experimental import preprocessing
+from tensorflow.python.keras import metrics
+from tensorflow.python.keras.layers.preprocessing.image_preprocessing import Resizing
 from tensorflow.python.ops.gen_batch_ops import batch
 from tensorflow.python.ops.gen_logging_ops import Print
 from tensorflow.python.ops.gen_math_ops import imag
@@ -59,4 +63,54 @@ train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUN
 test_ds = test_ds.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUNE)
 val_ds = val_ds.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUNE)
 
+resize_and_rescale = tf.keras.Sequential([
+    layers.experimental.preprocessing.Resizing(IMAGE_SIZE,IMAGE_SIZE),
+    layers.experimental.preprocessing.Rescaling(1.0/255)
+])
+
+data_agumentation = tf.keras.Sequential([
+    layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+    layers.experimental.preprocessing.RandomRotation(0.2)
+])
+
+inpt_shape = (IMAGE_SIZE, IMAGE_SIZE, BATCH_SIZE, CHANNEL_SIZE)
+n_classes = 3
+
+model = models.Sequential([
+    resize_and_rescale,
+    data_agumentation,
+    layers.Conv2D(32,(3,3), activation='relu',input_shape = inpt_shape),
+    layers.MaxPool2D((2,2)),
+    layers.Conv2D(64,kernel_size= (3,3), activation='relu'),
+    layers.MaxPool2D((2,2)),
+    layers.Conv2D(64,kernel_size= (3,3), activation='relu'),
+    layers.MaxPool2D((2,2)),
+    layers.Conv2D(64,kernel_size= (3,3), activation='relu'),
+    layers.MaxPool2D((2,2)),
+    layers.Conv2D(64,kernel_size= (3,3), activation='relu'),
+    layers.MaxPool2D((2,2)),
+    layers.Conv2D(64,kernel_size= (3,3), activation='relu'),
+    layers.MaxPool2D((2,2)),
+    layers.Flatten(),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(n_classes, activation='softmax')
+])
+
+model.build(input_shape=inpt_shape)
+
+model.summary()
+
+model.compile(
+    optimizer='adam',
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = False),
+    metrics = ['accuracy']
+)
+
+history = model.fit(
+    train_ds,
+    epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    verbose=1,
+    validation_data=val_ds
+)
 
