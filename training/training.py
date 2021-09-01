@@ -176,5 +176,6 @@ for images, labels in test_ds.take(1):
 
 import os
 os.listdir("../models")
-model_version = 1
+
+model_version=max([int(i) for i in os.listdir("../models") + [0]])+1
 model.save(f"../models/{model_version}")
