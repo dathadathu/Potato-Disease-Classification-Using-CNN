@@ -10,6 +10,7 @@ from tensorflow.python.keras.layers.preprocessing.image_preprocessing import Res
 from tensorflow.python.ops.gen_batch_ops import batch
 from tensorflow.python.ops.gen_logging_ops import Print
 from tensorflow.python.ops.gen_math_ops import imag
+import numpy as np
 
 IMAGE_SIZE = 256
 BATCH_SIZE = 32
@@ -113,4 +114,42 @@ history = model.fit(
     verbose=1,
     validation_data=val_ds
 )
+
+scores = model.evaluate(test_ds)
+
+scores
+
+print(history.params)
+
+history.history.keys()
+history.history.values()
+
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+plt.figure(figsize=(10,10))
+plt.subplot(1,2,1)
+plt.plot(range(EPOCHS), acc, label = "Training Accuracy")
+plt.plot(range(EPOCHS), val_acc, label = "Validation Accuracy")
+plt.title("Training and Validation accuracy")
+
+plt.figure(figsize=(10,10))
+plt.subplot(1,2,2)
+plt.plot(range(EPOCHS), loss, label = "Training loss")
+plt.plot(range(EPOCHS), val_loss, label = "Validation loss")
+plt.title("Training and Validation loss")
+
+for images_batch, labels_batch in test_ds.take(1):
+
+    first_image = images_batch[0].numpy().astype('uint8')
+    first_label = label_batch[0].numpy()
+
+    plt.imshow(first_image)
+    print("Actual Label:", class_names[first_label])
+    
+    batch_prediction = model.predict(images_batch)
+    print("Predicted Label:", class_names[np.argmax(batch_prediction[0])])
 
