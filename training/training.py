@@ -20,7 +20,7 @@ EPOCHS = 50
 
 
 dataset = tf.keras.preprocessing.image_dataset_from_directory(
-    "Data",
+    "/home/shiva/Desktop/Github-Uploads/pdc/Potato-Disease-Classification-Using-CNN/Data",
     shuffle = True,
     image_size = (IMAGE_SIZE,IMAGE_SIZE),
     batch_size = BATCH_SIZE 
@@ -175,7 +175,7 @@ for images, labels in test_ds.take(1):
         plt.title(f"Actual : {actual_class},\n Predicted : {predicted_class}, \n Confidence : {confidence}")
 
 import os
-os.listdir("../models")
+os.listdir("../saved_models")
 
-model_version=max([int(i) for i in os.listdir("../models") + [0]])+1
-model.save(f"../models/{model_version}")
+model_version=max([int(i) for i in os.listdir("Potato-Disease-Classification-Using-CNN/saved_models") + [0]])+1
+model.save(f"../saved_models{model_version}")
