@@ -178,4 +178,4 @@ import os
 os.listdir("../saved_models")
 
 model_version=max([int(i) for i in os.listdir("Potato-Disease-Classification-Using-CNN/saved_models") + [0]])+1
-model.save(f"../saved_models{model_version}")
+model.save(f"Potato-Disease-Classification-Using-CNN/saved_models/{model_version}")
